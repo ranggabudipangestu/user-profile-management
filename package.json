@@ -5,17 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "ts-node src/index.ts",
-    "dev": "nodemon",
+    "start": "nodemon dist/src/index.js",
     "test": "jest",
     "migration": "npx sequelize-cli db:migrate"
-  },
-  "nodemonConfig": {
-    "watch": [
-      "src"
-    ],
-    "ext": "ts",
-    "exec": "ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",
