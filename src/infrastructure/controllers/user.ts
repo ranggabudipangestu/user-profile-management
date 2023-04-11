@@ -1,5 +1,5 @@
 import { UserService } from "../../domain/services/user"
-import { responseWrapper } from "../utils/responseWrapper"
+import { APIResponse } from "../utils/responseWrapper"
 import fs from "fs"
 
 
@@ -12,22 +12,26 @@ interface UserController{
 }
 export class UserControllerImpl implements UserController{
   constructor(
-    private service: UserService
+    private service: UserService,
+    private apiResponse: APIResponse
   ){}
 
   async createAccount(req, res){
     try{
       const input = req.body
-      const { profileImage } = req.files
-      input.profileImage = fs.readFileSync(profileImage.path);
+      let profileImage = null
+      if(req.files){
+        profileImage = req.files
+        input.profileImage = fs.readFileSync(profileImage.path);
+      }
 
       const result = await this.service.createAccount(input)
       if (result.error) {
-        return responseWrapper(res, 400, false, result.message, null);
+        return this.apiResponse.wrap(res, 400, false, result.message, null);
       }
-      return responseWrapper(res, 200, true, result.message, result.data);
+      return this.apiResponse.wrap(res, 200, true, result.message, result.data);
     }catch(err){
-      return responseWrapper(res, 500, false, "INTERNAL SERVER ERROR", null);
+      return this.apiResponse.wrap(res, 500, false, "INTERNAL SERVER ERROR", null);
     }
   }
 
@@ -36,12 +40,12 @@ export class UserControllerImpl implements UserController{
       const input = req.body
       const result = await this.service.login(input)
       if (result.error) {
-        return responseWrapper(res, 400, false, result.message, null);
+        return this.apiResponse.wrap(res, 400, false, result.message, null);
       }
-      return responseWrapper(res, 200, true, result.message, result.token);
+      return this.apiResponse.wrap(res, 200, true, result.message, result.token);
     }catch(err){
       console.log(err)
-      return responseWrapper(res, 500, false, "INTERNAL SERVER ERROR", null);
+      return this.apiResponse.wrap(res, 500, false, "INTERNAL SERVER ERROR", null);
     }
   }
 
@@ -50,12 +54,11 @@ export class UserControllerImpl implements UserController{
       const { id } = res.locals.userData.data
       const result = await this.service.getUserById({ id })
       if (result.error) {
-        return responseWrapper(res, 400, false, result.message, null);
+        return this.apiResponse.wrap(res, 400, false, result.message, null);
       }
-      return responseWrapper(res, 200, true, result.message, result.data);
+      return this.apiResponse.wrap(res, 200, true, result.message, result.data);
     }catch(err){
-      console.log(err)
-      return responseWrapper(res, 500, false, "INTERNAL SERVER ERROR", null);
+      return this.apiResponse.wrap(res, 500, false, "INTERNAL SERVER ERROR", null);
     }
   }
 
@@ -63,17 +66,19 @@ export class UserControllerImpl implements UserController{
     try{
       const { id } = res.locals.userData.data
       const input = req.body
-      const { profileImage } = req.files
-      input.profileImage = fs.readFileSync(profileImage.path);
+      let profileImage = null
+      if(req.files){
+        profileImage = req.files
+        input.profileImage = fs.readFileSync(profileImage.path);
+      }
 
       const result = await this.service.updateUser(id, input)
       if (result.error) {
-        return responseWrapper(res, 400, false, result.message, null);
+        return this.apiResponse.wrap(res, 400, false, result.message, null);
       }
-      return responseWrapper(res, 200, true, result.message, result.data);
+      return this.apiResponse.wrap(res, 200, true, result.message, result.data);
     }catch(err){
-      console.log(err)
-      return responseWrapper(res, 500, false, "INTERNAL SERVER ERROR", null);
+      return this.apiResponse.wrap(res, 500, false, "INTERNAL SERVER ERROR", null);
     }
   }
 
@@ -84,12 +89,12 @@ export class UserControllerImpl implements UserController{
 
       const result = await this.service.updatePassword(email, input)
       if (result.error) {
-        return responseWrapper(res, 400, false, result.message, null);
+        return this.apiResponse.wrap(res, 400, false, result.message, null);
       }
-      return responseWrapper(res, 200, true, result.message, result.data);
+      return this.apiResponse.wrap(res, 200, true, result.message, result.data);
     }catch(err){
       console.log(err)
-      return responseWrapper(res, 500, false, "INTERNAL SERVER ERROR", null);
+      return this.apiResponse.wrap(res, 500, false, "INTERNAL SERVER ERROR", null);
     }
   }
   

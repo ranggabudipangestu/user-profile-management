@@ -8,11 +8,11 @@ import { Hash } from "../../infrastructure/utils/hashing";
 import { Jwt } from "../../infrastructure/utils/token";
 
 export interface UserService {
-  createAccount(input: CreateUser): Promise<any>;
-  login(input: Login): Promise<any>;
-  getUserById({ id }): Promise<any>;
-  updateUser(id, input: UpdateProfile): Promise<any>;
-  updatePassword(email, input: UpdatePassword): Promise<any>;
+  createAccount(input: CreateUser);
+  login(input: Login);
+  getUserById({ id });
+  updateUser(id, input: UpdateProfile);
+  updatePassword(email, input: UpdatePassword);
 }
 
 export class UserServiceImpl implements UserService {
