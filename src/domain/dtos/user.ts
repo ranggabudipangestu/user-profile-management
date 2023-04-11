@@ -1,9 +1,9 @@
 export interface CreateUser {
   email: string;
   fullName: string;
-  description: string;
+  description?: string;
   phoneNumber: string;
-  profileImage: Blob;
+  profileImage?: any;
   username: string;
   password: string;
 
@@ -22,7 +22,7 @@ export interface UpdateProfile {
   fullName: string;
   description: string;
   phoneNumber: string;
-  profileImage: Blob;
+  profileImage: any;
 }
 
 export interface UpdatePassword {

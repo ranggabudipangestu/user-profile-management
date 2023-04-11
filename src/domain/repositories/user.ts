@@ -1,9 +1,10 @@
 import { Op } from "sequelize";
 import { User } from "../../models/user";
 import { elasticClient } from "../../infrastructure/database/elasticsearch/config";
+import { CreateUser } from "../dtos/user";
 
-interface UserRepository{
-  create({ email, password, username }): Promise<any>
+export interface UserRepository{
+  create(input:CreateUser): Promise<any>
   getUserByEmailOrUsername({ email }): Promise<any>
   getUserById({ id }): Promise<any>
   getProfilePicture({ id }): Promise<any>
@@ -12,7 +13,8 @@ interface UserRepository{
 }
 
 export class UserRepositoryImpl implements UserRepository {
-  async create({email, password, username, description, fullName, phoneNumber, profileImage}): Promise<any> {
+  async create(input:CreateUser): Promise<any> {
+    const {email, password, username, description, fullName, phoneNumber, profileImage} = input
     try{
       const result = await User.create({
         profileImage,
@@ -55,16 +57,20 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async getUserById({ id }): Promise<any> {
-    const getData = await elasticClient.search({
-      index: 'users',
-      query: {
-        match : {
-          userId: id
+    try{
+      const getData = await elasticClient.search({
+        index: 'users',
+        query: {
+          match : {
+            userId: id
+          }
         }
-      }
-    })
-
-    return getData.hits.hits
+      })
+  
+      return getData.hits.hits
+    }catch(error){
+      throw new Error(error)
+    }
   }
 
   async getProfilePicture({ id }): Promise<any> {

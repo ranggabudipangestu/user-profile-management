@@ -3,6 +3,10 @@ import http from 'http';
 import cors from 'cors';
 import { json, urlencoded } from 'body-parser';
 import * as routes from "./routes"
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import path from 'path';
+import SwaggerDoc from '../../swagger.json'
 
 export async function AppServer(){
 
@@ -18,11 +22,11 @@ export async function AppServer(){
     res.send('Server is running properly')
   })
 
-  // await elasticClient.indices.delete({
-  //   index: 'users'
-  // })
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(SwaggerDoc));
 
   app.use('/', APIRouter)
+
+  
   routes.init(APIRouter)
   
   return httpServer

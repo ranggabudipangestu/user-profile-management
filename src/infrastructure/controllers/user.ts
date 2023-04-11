@@ -1,7 +1,7 @@
-import { Request, Response, Router } from "express"
-import { UserServiceImpl } from "../../domain/services/user"
+import { UserService } from "../../domain/services/user"
 import { responseWrapper } from "../utils/responseWrapper"
 import fs from "fs"
+
 
 interface UserController{
   createAccount(req, res)
@@ -12,7 +12,7 @@ interface UserController{
 }
 export class UserControllerImpl implements UserController{
   constructor(
-    private service: UserServiceImpl
+    private service: UserService
   ){}
 
   async createAccount(req, res){

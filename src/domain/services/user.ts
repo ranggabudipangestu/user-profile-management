@@ -1,5 +1,5 @@
-import { UserRepositoryImpl } from "../repositories/user";
-import { CreateUser, Login, Token, UpdateProfile, UpdatePassword } from "../dtos/user";
+import { UserRepository } from "../repositories/user";
+import { CreateUser, Login, UpdateProfile, UpdatePassword } from "../dtos/user";
 
 import { loginValidation } from "../validator/loginValidation";
 import { createAccountValidation } from "../validator/createAccountValidation";
@@ -8,8 +8,8 @@ import { Hash } from "../../infrastructure/utils/hashing";
 import { Jwt } from "../../infrastructure/utils/token";
 
 export interface UserService {
-  createAccount(input: CreateUser): Promise<string>;
-  login(input: Login): Promise<Token>;
+  createAccount(input: CreateUser): Promise<any>;
+  login(input: Login): Promise<any>;
   getUserById({ id }): Promise<any>;
   updateUser(id, input: UpdateProfile): Promise<any>;
   updatePassword(email, input: UpdatePassword): Promise<any>;
@@ -17,7 +17,7 @@ export interface UserService {
 
 export class UserServiceImpl implements UserService {
   constructor(
-    private repository: UserRepositoryImpl,
+    private repository: UserRepository,
     private hashing: Hash,
     private jwt: Jwt
   ) {
@@ -43,7 +43,7 @@ export class UserServiceImpl implements UserService {
       });
       if (checkExists)
         return { error: true, message: "Username or email already exist" };
-      password = this.hashing.hash(password);
+      password = await this.hashing.hash(password);
       const result = await this.repository.create({
         email,
         username,
@@ -97,7 +97,6 @@ export class UserServiceImpl implements UserService {
         };
       }
     } catch (err) {
-      console.log(err);
       return { error: true, message: err.message || "Failed to login" };
     }
   }
@@ -188,7 +187,7 @@ export class UserServiceImpl implements UserService {
 
       await this.repository.updatePassword({ 
         id: getUserData.id, 
-        password: this.hashing.hash(newPassword)
+        password: await this.hashing.hash(newPassword)
       });
       
       return {
@@ -197,8 +196,7 @@ export class UserServiceImpl implements UserService {
       };
       
     } catch (err) {
-      console.log(err);
-      return { error: true, message: err };
+      return { error: true, message: err || "Failed to Update Password" };
     }
   }
 }
