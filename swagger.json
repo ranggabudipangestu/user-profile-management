@@ -282,8 +282,8 @@
   "components": {
     "securitySchemes":{
       "Bearer":{
-        "type":"apiKey",
-        "in":"header",
+        "scheme":"bearer",
+        "type":"http",
         "name":"Authorization",
         "description":"Enter the token with the `Bearer: ` prefix, e.g. Bearer abcde12345"
       }
