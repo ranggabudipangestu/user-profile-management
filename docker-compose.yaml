@@ -7,17 +7,26 @@ services:
         dockerfile: ./Dockerfile
       container_name: populix-api
       image: populix-api:latest
+      
       ports:
           - 4000:4000
       environment:
           - PORT=4000
-          
+          - DB_HOST=mysql
+          - DB_USER=your_user
+          - DB_PASSWORD=your_password
+          - DB_PORT=3306
+          - DB_NAME=populix
+          - SECRET_KEY=your_secret_key
+          - ELASTIC_SEARCH_CLOUD_USERNAME=your_cloud_username
+          - ELASTIC_SEARCH_CLOUD_PASSWORD=your_cloud_password
+          - ELASTIC_SEARCH_CLOUD_ID=your_cloud_id
       networks: 
         - populix-network
       depends_on: 
-        - mysql-populix
-  mysql-populix:
-        container_name: mysql-populix
+        - mysql
+  mysql:
+        container_name: mysql
         image: mysql:8.0.0
         environment: 
             - MYSQL_ROOT_PASSWORD=root
@@ -25,12 +34,12 @@ services:
         command: --default-authentication-plugin=mysql_native_password
         restart: always
         expose:
-          - "3301"
+          - "3306"
         ports:
-          - "3301:3306"    
+          - "3306:3306"    
         networks:
         volumes: 
-            - mysql-populix:/src/mysql/app
+            - mysql:/src/mysql/app
         restart: always 
         networks:
           - populix-network
@@ -39,5 +48,5 @@ networks:
       name: populix-network
       driver: bridge
 volumes: 
-    mysql-populix:
-        name: mysql-populix
+    mysql:
+        name: mysql
