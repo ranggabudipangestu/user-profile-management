@@ -7,27 +7,30 @@ services:
       ports:
           - 4000:4000
       environment:
-          - MONGO_DATABASE_URL=mongodb://mongodb:27017/monster-db
-          - BASE_URL=http://localhost:4000
           - PORT=4000
-          - AWS_ENDPOINT=YOUR_AWS_ENDPOINT
-          - AWS_REGION=YOUR_AWS_REGION
-          - AWS_BUCKETNAME=YOUR_AWS_BUCKETNAME
-          - AWS_ACCESS_KEY=YOUR_AWS_ACCESS_KEY
-          - AWS_SECRET_KEY=YOUR_AWS_SECRET_KEY
+          - DB_HOST=127.0.0.1
+          - DB_USER=root
+          - DB_PASSWORD=root
+          - DB_PORT=3306
+          - DB_NAME=populix
+          - SECRET_KEY=secret
+          - ELASTIC_SEARCH_CLOUD_USERNAME=elastic
+          - ELASTIC_SEARCH_CLOUD_PASSWORD=J7avYOQB6dA3wM34AIiiNrbg
+          - ELASTIC_SEARCH_CLOUD_ID=1df8142ba5c24fe5852106708b9e570d:dXMtY2VudHJhbDEuZ2NwLmNsb3VkLmVzLmlvOjQ0MyQzNzVkMWI4YjZjM2M0M2ViODgxN2UyN2MzMTMyMDI2OSRlMTRiMjFhYjRiMGQ0NTZlOTBmMjdkZTg0OThjMjIwMA==
       networks: 
         - populix-network
       depends_on: 
         - mongodb
-  mongodb:
-        image: mongo:latest
-        container_name: mongodb
-        hostname: mongodb
-        volumes:
-          - mongo_data:/var/lib/mongo
-        ports:
-          - "27017:27017"
-        networks: 
+  mysql:
+        container_name: mysql
+        image: mysql:8.0.0
+        environment: 
+            - MYSQL_ROOT_PASSWORD=root
+        ports: 
+            - 3306:3306
+        volumes: 
+            - mysql_data:/src/mysql/app
+        restart: always 
           - populix-network
 networks:
     populix-network:
@@ -35,4 +38,4 @@ networks:
       driver: bridge
 volumes: 
     mongo_data:
-        name: mongo_data
+        name: mysql_data
