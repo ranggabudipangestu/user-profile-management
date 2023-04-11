@@ -4,7 +4,6 @@
     "version": "1.0.0",
     "title": "POPULIX"
   },
- 
   "paths": {
     "/user/create": {
       "post": {
@@ -131,20 +130,15 @@
     },
     "/user/profile": {
       "get": {
+        "security":{
+          "Bearer": []
+         },
         "tags": [
           "User Profile"
         ],
         "summary": "Get User Profile",
         "description": "Returns the user profile data.",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token",
-            "required": true,
-            "type": "string"
-          }
-        ],
+        
         "responses": {
           "200": {
             "description": "OK",
@@ -182,20 +176,14 @@
     },
     "/user/update-profile": {
       "put": {
+        "security":{
+          "Bearer": []
+         },
         "tags": [
           "Update Profile"
         ],
         "summary": "Update user profile",
         "description": "This API updates user profile details like full name, description, phone number, and profile image.",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Bearer token",
-            "required": true,
-            "type": "string"
-          }
-        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -250,20 +238,13 @@
     },
     "/user/update-password": {
       "put": {
+        "security":{
+          "Bearer": []
+         },
         "tags": [
           "Update Password"
         ],
         "summary": "Update user's password",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "description": "Bearer token",
-            "required": true,
-            "type": "string",
-            "format": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoyLCJlbWFpbCI6InJhbmdnYUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6InJhbmdnYSJ9LCJpYXQiOjE2ODExMTA1NTMsImV4cCI6MTY4MTExNDE1M30.GsncMzyz2VhZ--Ih9WIBBCBZSeHPeni9b6cmG_19Ubo"
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -299,6 +280,14 @@
     }
   },
   "components": {
+    "securitySchemes":{
+      "Bearer":{
+        "type":"apiKey",
+        "in":"header",
+        "name":"Authorization",
+        "description":"Enter the token with the `Bearer: ` prefix, e.g. Bearer abcde12345"
+      }
+    },
     "responses": {
       "ServerError": {
         "description": "Server error.",

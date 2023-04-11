@@ -16,7 +16,7 @@ export default class JwtImpl implements Jwt {
         data
       },
       this.secret,
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
   }
 
