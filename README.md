@@ -44,7 +44,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd populix
+  cd user-profile-management  ``
 ```
 
 Adjust environment in docker-compose.yaml
